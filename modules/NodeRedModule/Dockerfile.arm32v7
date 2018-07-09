@@ -1,0 +1,85 @@
+FROM nodered/node-red-docker:rpi
+MAINTAINER Ron Dagdag <ron@dagdag.net>
+LABEL version="1.0" \
+      description="A Node-RED image with the IoT modules installed"
+
+
+USER root
+
+#update cache
+RUN apt-get update
+
+# Install python and dependencies
+RUN apt-get install -y \
+    git-core \
+    build-essential \
+    gcc \
+    python \
+    python-dev \
+    python-pip \
+    python-virtualenv \
+    --no-install-recommends && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install wiringpi
+#RUN pip install pyserial
+#WORKDIR /opt/wiringPi
+#RUN git clone git://git.drogon.net/wiringPi .
+#RUN chown -R node-red:node-red /opt/wiringPi
+#RUN git pull origin && ./build
+#RUN pip install wiringpi2
+
+
+# Install python rpi - TODO find way to install documentation
+#RUN pip install RPi.GPIO
+
+RUN apt-get update && apt-get install -y python-rpi.gpio sense-hat
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  bluetooth \
+  bluez \
+  libbluetooth-dev \
+  libudev-dev \
+  build-essential bluez-tools
+
+RUN pip install pillow
+
+RUN usermod -a -G bluetooth node-red && \
+    setcap cap_net_raw+eip /usr/local/bin/node
+
+RUN echo "node-red ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+WORKDIR /usr/src/node-red
+
+USER node-red
+
+#install admin script
+#RUN npm install node-red-admin
+
+# Install additional libs
+RUN npm install --quiet node-red-contrib-gpio
+#RUN npm install --quiet node-red-dashboard
+#RUN npm install --quiet node-red-contrib-ifttt
+#RUN npm install --quiet node-red-contrib-google-home-notify
+#RUN npm install --quiet node-red-contrib-slack
+#RUN npm install --quiet node-red-contrib-gpio
+#RUN npm install --quiet node-red-contrib-redis
+#RUN npm install --quiet node-red-node-email
+
+RUN npm install --quiet \
+    noble \
+    node-red-node-pi-sense-hat \
+    node-red-contrib-modbus \
+    node-red-contrib-modbustcp \
+    node-red-contrib-azure-iot-hub 
+    
+    #\
+    #node-red-node-mongodb \
+    #node-red-contrib-influxdb \
+    #node-red-node-xmpp \
+    #node-red-node-irc \
+    #node-red-node-pushbullet \
+ 
+EXPOSE 1880
+
+CMD ["npm", "run", "start"]
