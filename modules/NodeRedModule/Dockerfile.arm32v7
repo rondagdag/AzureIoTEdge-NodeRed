@@ -29,7 +29,6 @@ RUN apt-get install -y \
 #RUN git pull origin && ./build
 #RUN pip install wiringpi2
 
-
 # Install python rpi - TODO find way to install documentation
 #RUN pip install RPi.GPIO
 
@@ -49,15 +48,19 @@ RUN usermod -a -G bluetooth node-red && \
 
 RUN echo "node-red ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
+RUN mkdir -p /usr/src/node-red
 WORKDIR /usr/src/node-red
 
 USER node-red
+
+COPY package.json ./
+RUN npm install --production --quiet
 
 #install admin script
 #RUN npm install node-red-admin
 
 # Install additional libs
-RUN npm install --quiet node-red-contrib-gpio
+#RUN npm install --quiet node-red-contrib-gpio
 #RUN npm install --quiet node-red-dashboard
 #RUN npm install --quiet node-red-contrib-ifttt
 #RUN npm install --quiet node-red-contrib-google-home-notify
@@ -66,12 +69,12 @@ RUN npm install --quiet node-red-contrib-gpio
 #RUN npm install --quiet node-red-contrib-redis
 #RUN npm install --quiet node-red-node-email
 
-RUN npm install --quiet \
-    noble \
-    node-red-node-pi-sense-hat \
-    node-red-contrib-modbus \
-    node-red-contrib-modbustcp \
-    node-red-contrib-azure-iot-hub 
+#RUN npm install --quiet \
+#    noble \
+#    node-red-node-pi-sense-hat \
+#    node-red-contrib-modbus \
+#    node-red-contrib-modbustcp \
+#    node-red-contrib-azure-iot-hub 
     
     #\
     #node-red-node-mongodb \
@@ -80,6 +83,12 @@ RUN npm install --quiet \
     #node-red-node-irc \
     #node-red-node-pushbullet \
  
+VOLUME ["/data"]
 EXPOSE 1880
 
-CMD ["npm", "run", "start"]
+COPY flows.json /data
+COPY settings.js /data
+# Environment variable holding file path for flows configuration
+ENV FLOWS=flows.json
+
+CMD ["npm", "start", "--", "--userDir", "/data"]

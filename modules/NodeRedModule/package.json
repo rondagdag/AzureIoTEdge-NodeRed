@@ -1,8 +1,24 @@
 {
     "name": "NodeRedModule",
     "version": "0.0.1",
+    "license": "",
+    "main": "node_modules/node-red/red/red.js",
+    "scripts": {
+        "start": "node $NODE_OPTIONS node_modules/node-red/red.js -v $FLOWS"
+    },
+    "contributors": [
+        {
+        "name": "Ron Dagdag"
+        }
+    ],
     "dependencies": {
         "azure-iot-device": "1.7.0",
-        "azure-iot-device-mqtt": "1.7.0"
+        "azure-iot-device-mqtt": "1.7.0",
+        "noble": "^1.9.1",
+        "node-red-contrib-azure-iot-hub": "^0.4.0",
+        "node-red-contrib-gpio": "^0.14.0",
+        "node-red-contrib-modbus": "^3.6.1",
+        "node-red-contrib-modbustcp": "^1.2.1",
+        "node-red-node-pi-sense-hat": "0.0.16"
     }
 }
