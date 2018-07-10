@@ -1,0 +1,35 @@
+#FROM arm32v7/node:8-slim
+FROM resin/raspberry-pi-alpine-node:9.11-slim
+
+MAINTAINER Ron Dagdag <ron@dagdag.net>
+LABEL version="1.0" \
+      description="A Node-RED image with the IoT modules installed"
+
+# Intall the rpi.gpio python module
+#RUN pip install --no-cache-dir rpi.gpio
+#RUN pip install --no-cache-dir Pillow
+#RUN pip install --no-cache-dir sense-hat
+
+#RUN apk update && apk upgrade && \
+#  apk add nodejs \
+#    nodejs-dev \
+#    py-rpigpio
+
+RUN echo "node-red ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+RUN mkdir -p /usr/src/node-red
+WORKDIR /usr/src/node-red
+
+COPY package.json ./
+RUN npm config set registry http://registry.npmjs.org/ 
+RUN npm install --production --quiet
+
+EXPOSE 1880
+# Environment variable holding file path for flows configuration
+ENV FLOWS=flows.json
+
+COPY flows.json /usr/src/node-red
+COPY settings.js /usr/src/node-red
+
+
+CMD ["npm", "start", "--", "--userDir", "/usr/src/node-red"]

@@ -36,13 +36,13 @@
           }
         },
         "modules": {
-          "small_node_red": {
+          "NodeRedModule": {
             "version": "1.0",
             "type": "docker",
             "status": "running",
             "restartPolicy": "always",
             "settings": {
-              "image": "${MODULES.small_node_red.arm32v7}",
+              "image": "${MODULES.NodeRedModule.arm32v7}",
               "createOptions": "{\"HostConfig\":{\"Privileged\": true, \"CapAdd\":[\"SYS_RAWIO\"],\"Devices\":[ {\"PathOnHost\":\"/dev/fb1\",\"PathInContainer\":\"/dev/fb1\",\"CgroupPermissions\":\"mrw\"}, {\"PathOnHost\":\"/dev/i2c-1\",\"PathInContainer\":\"/dev/i2c-1\",\"CgroupPermissions\":\"mrw\"}, {\"PathOnHost\":\"/dev/input/event1\",\"PathInContainer\":\"/dev/input/event1\",\"CgroupPermissions\":\"mrw\"}], \"PortBindings\":{\"1880/tcp\":[{\"HostPort\":\"1880\"}]}}}"
             }
           }

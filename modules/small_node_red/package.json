@@ -1,0 +1,16 @@
+{
+    "name": "small_node_red",
+    "version": "0.0.1",
+    "main": "node_modules/node-red/red/red.js",
+    "scripts": {
+        "start": "node $NODE_OPTIONS node_modules/node-red/red.js -v $FLOWS"
+    },
+    "contributors": [
+        {
+        "name": "Ron Dagdag"
+        }
+    ],
+    "dependencies": {
+        "node-red": "^0.18.7"
+    }
+}    

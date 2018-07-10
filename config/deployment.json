@@ -36,13 +36,13 @@
           }
         },
         "modules": {
-          "NodeRedModule": {
+          "small_node_red": {
             "version": "1.0",
             "type": "docker",
             "status": "running",
             "restartPolicy": "always",
             "settings": {
-              "image": "rondagdag/noderedmodule:0.0.7-arm32v7",
+              "image": "rondagdag/small_node_red:0.0.3-arm32v7",
               "createOptions": "{\"HostConfig\":{\"Privileged\": true, \"CapAdd\":[\"SYS_RAWIO\"],\"Devices\":[ {\"PathOnHost\":\"/dev/fb1\",\"PathInContainer\":\"/dev/fb1\",\"CgroupPermissions\":\"mrw\"}, {\"PathOnHost\":\"/dev/i2c-1\",\"PathInContainer\":\"/dev/i2c-1\",\"CgroupPermissions\":\"mrw\"}, {\"PathOnHost\":\"/dev/input/event1\",\"PathInContainer\":\"/dev/input/event1\",\"CgroupPermissions\":\"mrw\"}], \"PortBindings\":{\"1880/tcp\":[{\"HostPort\":\"1880\"}]}}}"
             }
           }
@@ -53,6 +53,7 @@
       "properties.desired": {
         "schemaVersion": "1.0",
         "routes": {
+          "small_node_redToIoTHub": "FROM /messages/modules/small_node_red/outputs/* INTO $upstream"
         },
         "storeAndForwardConfiguration": {
           "timeToLiveSecs": 7200
